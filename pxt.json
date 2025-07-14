@@ -11,7 +11,9 @@
         "assets.json",
         "tilemap.g.jres",
         "tilemap.g.ts",
-        "main.py"
+        "main.py",
+        "images.g.jres",
+        "images.g.ts"
     ],
     "testFiles": [
         "test.ts"
@@ -23,5 +25,5 @@
     "supportedTargets": [
         "arcade"
     ],
-    "preferredEditor": "pyprj"
+    "preferredEditor": "blocksprj"
 }

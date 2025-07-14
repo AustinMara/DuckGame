@@ -1,4 +1,3 @@
-
 def on_on_created(sprite):
     sprite.set_flag(SpriteFlag.GHOST_THROUGH_WALLS, True)
     sprite.x = randint(0, 160)
@@ -7,22 +6,15 @@ def on_on_created(sprite):
     else:
         sprite.y = 140
     sprite.follow(player1, 20)
-    if info.score() == enemies_to_next_level:
-        enemies_to_next_level = enemies_to_next_level + 5
-            
-        
-        if game.ask("(A)Upgrade Rotation", "(B)Upgrade Rate of fire"):
-            retationSpeed = retationSpeed * 2
-        else:
-            rateOfFire = rateOfFire * 1.5
 sprites.on_created(SpriteKind.enemy, on_on_created)
 
-
-
+def CreatePowerup(enemyKilled: Sprite):
+    global mySprite2
+    mySprite2 = powerupList._pick_random()
+    mySprite.set_position(enemyKilled.x, enemyKilled.x)
 
 def on_on_overlap(sprite3, otherSprite):
     sprites.destroy(otherSprite)
-    info.change_score_by(1)
 sprites.on_overlap(SpriteKind.projectile, SpriteKind.enemy, on_on_overlap)
 
 def on_a_pressed():
@@ -44,7 +36,7 @@ sprites.on_created(SpriteKind.projectile, on_on_created2)
 
 def on_a_repeated():
     global rotationProj, projectile
-    rotationProj += retationSpeed
+    rotationProj += retationSpeed2
     projectile = sprites.create_projectile_from_sprite(img("""
             2 2 2 2
             2 2 2 2
@@ -56,17 +48,30 @@ def on_a_repeated():
         75 * Math.sin(rotationProj))
 controller.A.on_event(ControllerButtonEvent.REPEATED, on_a_repeated)
 
+def on_on_overlap2(sprite4, otherSprite2):
+    if True:
+        pass
+sprites.on_overlap(SpriteKind.player, SpriteKind.food, on_on_overlap2)
+
+def on_on_destroyed(sprite5):
+    info.change_score_by(1)
+    if Math.percent_chance(10):
+        CreatePowerup(sprite5)
+sprites.on_destroyed(SpriteKind.enemy, on_on_destroyed)
+
 def on_left_repeated():
     pass
 controller.left.on_event(ControllerButtonEvent.REPEATED, on_left_repeated)
 
-mySprite: Sprite = None
 projectile: Sprite = None
 rotationProj = 0
 isFiring = False
+mySprite: Sprite = None
+mySprite2: Sprite = None
+powerupList: List[Sprite] = []
 player1: Sprite = None
-retationSpeed = 0
-retationSpeed = 0.4
+retationSpeed2 = 0
+retationSpeed2 = 0.4
 info.set_score(0)
 player1 = sprites.create(img("""
         . . . . . . . . . . . . . . . .
@@ -93,12 +98,23 @@ tiles.set_current_tilemap(tilemap("""
     """))
 scene.camera_follow_sprite(player1)
 tiles.place_on_random_tile(player1, sprites.dungeon.stair_large)
+rateOfFire2 = 200
+info.set_life(100)
+next_level = 5
+powerupList = [sprites.create(assets.image("""
+        speedUp
+        """), SpriteKind.food),
+    sprites.create(assets.image("""
+        rateOfFire
+        """), SpriteKind.food),
+    sprites.create(assets.image("""
+        nuke
+        """), SpriteKind.food)]
 
-rateOfFire = 200
 def on_forever():
     global rotationProj, projectile
     if isFiring:
-        rotationProj += retationSpeed
+        rotationProj += retationSpeed2
         projectile = sprites.create_projectile_from_sprite(img("""
                 2 2 2 2
                 2 2 2 2
@@ -108,7 +124,7 @@ def on_forever():
             player1,
             75 * Math.cos(rotationProj),
             75 * Math.sin(rotationProj))
-    pause(rateOfFire)
+    pause(rateOfFire2)
 forever(on_forever)
 
 def on_update_interval():
@@ -130,7 +146,4 @@ def on_update_interval():
             . . . f f f f f f . . . . .
             """),
         SpriteKind.enemy)
-    
-
-        
 game.on_update_interval(200, on_update_interval)
