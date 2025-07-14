@@ -9,12 +9,18 @@ def on_on_created(sprite):
 sprites.on_created(SpriteKind.enemy, on_on_created)
 
 def CreatePowerup(enemyKilled: Sprite):
-    global mySprite2
-    mySprite2 = powerupList._pick_random()
-    mySprite.set_position(enemyKilled.x, enemyKilled.x)
+    mySprite2
+    if Math.percent_chance(90):
+
+        mySprite2 = sprites.all_of_kind(SpriteKind.food)._pick_random()
+        console.log_value("sprite", mySprite2.x)
+        mySprite2.set_position(enemyKilled.x, enemyKilled.y)
+    else:
+        pass
+    sprites.destroy(enemyKilled)
 
 def on_on_overlap(sprite3, otherSprite):
-    sprites.destroy(otherSprite)
+    CreatePowerup(otherSprite)
 sprites.on_overlap(SpriteKind.projectile, SpriteKind.enemy, on_on_overlap)
 
 def on_a_pressed():
@@ -49,24 +55,26 @@ def on_a_repeated():
 controller.A.on_event(ControllerButtonEvent.REPEATED, on_a_repeated)
 
 def on_on_overlap2(sprite4, otherSprite2):
-    if True:
-        pass
+    if sprite4.overlaps_with(powerupList[0]):
+        print("boots")
+    if sprite4.overlaps_with(powerupList[1]):
+        print("rof")
+    if sprite4.overlaps_with(powerupList[2]):
+        print("nuke")
 sprites.on_overlap(SpriteKind.player, SpriteKind.food, on_on_overlap2)
 
 def on_on_destroyed(sprite5):
     info.change_score_by(1)
-    if Math.percent_chance(10):
-        CreatePowerup(sprite5)
 sprites.on_destroyed(SpriteKind.enemy, on_on_destroyed)
 
 def on_left_repeated():
     pass
 controller.left.on_event(ControllerButtonEvent.REPEATED, on_left_repeated)
 
+mySprite: Sprite = None
 projectile: Sprite = None
 rotationProj = 0
 isFiring = False
-mySprite: Sprite = None
 mySprite2: Sprite = None
 powerupList: List[Sprite] = []
 player1: Sprite = None

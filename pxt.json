@@ -1,5 +1,5 @@
 {
-    "name": "eysgd",
+    "name": "ArcadeGame",
     "description": "",
     "dependencies": {
         "device": "*"
