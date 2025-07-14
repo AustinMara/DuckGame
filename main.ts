@@ -9,12 +9,22 @@ sprites.onCreated(SpriteKind.Enemy, function (sprite) {
     sprite.follow(player1, 20)
 })
 function CreatePowerup (enemyKilled: Sprite) {
-    mySprite2 = powerupList._pickRandom()
-    console.logValue("sprite", mySprite2.x)
-    mySprite.setPosition(enemyKilled.x, enemyKilled.y)
+    let mySprite2: Sprite;
+mySprite2
+if (Math.percentChance(10)) {
+        mySprite2 = powerupList._pickRandom()
+        console.logValue("sprite", mySprite2.x)
+        mySprite2.setPosition(enemyKilled.x, enemyKilled.y)
+    } else {
+    	
+    }
+    sprites.destroy(enemyKilled)
 }
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite3, otherSprite) {
-    sprites.destroy(otherSprite)
+    CreatePowerup(otherSprite)
+})
+sprites.onDestroyed(SpriteKind.Enemy, function (sprite5) {
+    info.changeScoreBy(1)
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     isFiring = !(isFiring)
@@ -29,6 +39,22 @@ sprites.onCreated(SpriteKind.Projectile, function (sprite2) {
     sprite2.setFlag(SpriteFlag.RelativeToCamera, false)
     scene.cameraShake(2, 100)
 })
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite4, otherSprite2) {
+    mySprite.setFlag(SpriteFlag.DestroyOnWall, true)
+    if (sprite4.overlapsWith(powerupList[0])) {
+        console.log("boots")
+        retationSpeed2 += 0.1
+    }
+    if (sprite4.overlapsWith(powerupList[1])) {
+        console.log("rof")
+        rateOfFire2 += 50
+    }
+    if (sprite4.overlapsWith(powerupList[2])) {
+        console.log("nuke")
+        sprites.destroyAllSpritesOfKind(SpriteKind.Enemy, effects.fire, 100)
+    }
+    sprites.destroy(otherSprite2)
+})
 controller.A.onEvent(ControllerButtonEvent.Repeated, function () {
     rotationProj += retationSpeed2
     projectile = sprites.createProjectileFromSprite(img`
@@ -38,28 +64,17 @@ controller.A.onEvent(ControllerButtonEvent.Repeated, function () {
         2 2 2 2 
         `, player1, 75 * Math.cos(rotationProj), 75 * Math.sin(rotationProj))
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
-    if (true) {
-    	
-    }
-})
-sprites.onDestroyed(SpriteKind.Enemy, function (sprite) {
-    info.changeScoreBy(1)
-    if (Math.percentChance(50)) {
-        CreatePowerup(sprite)
-    }
-})
 controller.left.onEvent(ControllerButtonEvent.Repeated, function () {
 	
 })
 let projectile: Sprite = null
 let rotationProj = 0
-let isFiring = false
 let mySprite: Sprite = null
-let mySprite2: Sprite = null
+let isFiring = false
 let powerupList: Sprite[] = []
 let player1: Sprite = null
 let retationSpeed2 = 0
+let mySprite22 = null
 retationSpeed2 = 0.4
 info.setScore(0)
 player1 = sprites.create(img`
